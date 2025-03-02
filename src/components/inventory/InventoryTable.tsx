@@ -24,6 +24,7 @@ interface InventoryItem {
   sku: string;
   name: string;
   category: string;
+  subCategory: string;
   quantity: number;
   cost: number;
   price: number;
@@ -91,6 +92,7 @@ const InventoryTable = ({
             <TableHead>SKU</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Category</TableHead>
+            <TableHead>Sub Category</TableHead>
             <TableHead className="text-right">Quantity</TableHead>
             <TableHead className="text-right">Cost ($)</TableHead>
             <TableHead className="text-right">Price ($)</TableHead>
@@ -117,6 +119,7 @@ const InventoryTable = ({
               <TableCell className="font-medium">{item.sku}</TableCell>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.category}</TableCell>
+              <TableCell>{item.subCategory}</TableCell>
               <TableCell className="text-right">{item.quantity}</TableCell>
               <TableCell className="text-right">
                 ${item.cost.toFixed(2)}
@@ -168,6 +171,7 @@ const defaultItems: InventoryItem[] = [
     sku: "PRD-001",
     name: "Wireless Headphones",
     category: "Electronics",
+    subCategory: "Audio",
     quantity: 45,
     cost: 35.99,
     price: 79.99,
@@ -178,6 +182,7 @@ const defaultItems: InventoryItem[] = [
     sku: "PRD-002",
     name: "Smart Watch",
     category: "Electronics",
+    subCategory: "Wearables",
     quantity: 12,
     cost: 89.99,
     price: 199.99,
@@ -187,7 +192,8 @@ const defaultItems: InventoryItem[] = [
     id: "3",
     sku: "PRD-003",
     name: "Bluetooth Speaker",
-    category: "Audio",
+    category: "Electronics",
+    subCategory: "Audio",
     quantity: 28,
     cost: 25.5,
     price: 59.99,
@@ -198,6 +204,7 @@ const defaultItems: InventoryItem[] = [
     sku: "PRD-004",
     name: "Laptop Stand",
     category: "Accessories",
+    subCategory: "Computer Accessories",
     quantity: 0,
     cost: 12.99,
     price: 29.99,
@@ -208,6 +215,7 @@ const defaultItems: InventoryItem[] = [
     sku: "PRD-005",
     name: "Wireless Mouse",
     category: "Accessories",
+    subCategory: "Computer Accessories",
     quantity: 32,
     cost: 15.75,
     price: 34.99,

@@ -28,7 +28,7 @@ import {
 
 interface InventoryToolbarProps {
   onSearch?: (query: string) => void;
-  onFilter?: (category: string) => void;
+  onFilter?: (category: string, subCategory?: string) => void;
   onAddItem?: () => void;
   onImport?: () => void;
   onExport?: () => void;
@@ -43,6 +43,7 @@ const InventoryToolbar = ({
 }: InventoryToolbarProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("all");
 
   const handleSearch = () => {
     onSearch(searchQuery);
@@ -50,7 +51,56 @@ const InventoryToolbar = ({
 
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
-    onFilter(value);
+    setSelectedSubCategory("all"); // Reset subcategory when category changes
+    onFilter(value, "all");
+  };
+
+  const handleSubCategoryChange = (value: string) => {
+    setSelectedSubCategory(value);
+    onFilter(selectedCategory, value);
+  };
+
+  // Get subcategories based on selected category
+  const getSubCategories = () => {
+    switch (selectedCategory) {
+      case "electronics":
+        return [
+          { value: "smartphones", label: "Smartphones" },
+          { value: "tvs", label: "TVs" },
+          { value: "audio", label: "Audio" },
+          { value: "wearables", label: "Wearables" },
+          { value: "computers", label: "Computers" },
+        ];
+      case "clothing":
+        return [
+          { value: "mens", label: "Men's" },
+          { value: "womens", label: "Women's" },
+          { value: "kids", label: "Kids" },
+          { value: "accessories", label: "Accessories" },
+        ];
+      case "food":
+        return [
+          { value: "beverages", label: "Beverages" },
+          { value: "snacks", label: "Snacks" },
+          { value: "canned", label: "Canned Goods" },
+          { value: "dairy", label: "Dairy" },
+        ];
+      case "office":
+        return [
+          { value: "stationery", label: "Stationery" },
+          { value: "paper", label: "Paper Products" },
+          { value: "furniture", label: "Furniture" },
+        ];
+      case "furniture":
+        return [
+          { value: "living", label: "Living Room" },
+          { value: "bedroom", label: "Bedroom" },
+          { value: "dining", label: "Dining" },
+          { value: "office", label: "Office" },
+        ];
+      default:
+        return [];
+    }
   };
 
   return (
@@ -85,6 +135,25 @@ const InventoryToolbar = ({
               <SelectItem value="furniture">Furniture</SelectItem>
             </SelectContent>
           </Select>
+
+          {selectedCategory !== "all" && (
+            <Select
+              value={selectedSubCategory}
+              onValueChange={handleSubCategoryChange}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="All Sub Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Sub Categories</SelectItem>
+                {getSubCategories().map((subCat) => (
+                  <SelectItem key={subCat.value} value={subCat.value}>
+                    {subCat.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
       </div>
 

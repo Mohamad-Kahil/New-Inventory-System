@@ -18,6 +18,7 @@ interface InventoryItem {
   sku: string;
   name: string;
   category: string;
+  subCategory: string;
   quantity: number;
   cost: number;
   price: number;
@@ -58,6 +59,7 @@ const InventoryItemForm = ({
                   sku: "SKU-" + Date.now(),
                   name: "New Item",
                   category: "Electronics",
+                  subCategory: "Smartphones",
                   quantity: 10,
                   cost: 10.0,
                   price: 19.99,
@@ -85,6 +87,7 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
   const [activeTab, setActiveTab] = useState("inventory");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("all");
 
   // Mock data for inventory stats
   const inventoryStats = {
@@ -141,9 +144,10 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
     // In a real app, you would filter the items based on the query
   };
 
-  const handleFilter = (category: string) => {
+  const handleFilter = (category: string, subCategory: string = "all") => {
     setSelectedCategory(category);
-    // In a real app, you would filter the items based on the category
+    setSelectedSubCategory(subCategory);
+    // In a real app, you would filter the items based on the category and subcategory
   };
 
   const handleImport = () => {
