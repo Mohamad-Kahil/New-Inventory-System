@@ -36,6 +36,7 @@ import {
   FileText,
   DollarSign,
   ShoppingBag,
+  Users,
 } from "lucide-react";
 
 interface Supplier {
@@ -456,7 +457,7 @@ const SuppliersModule: React.FC<SuppliersModuleProps> = () => {
                 <h3 className="text-lg font-medium">Contact Information</h3>
                 <div className="grid grid-cols-1 gap-3">
                   <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
+                    <Users className="h-4 w-4 text-muted-foreground" />
                     <span>{selectedSupplier.contactPerson}</span>
                   </div>
                   <div className="flex items-center gap-2">
