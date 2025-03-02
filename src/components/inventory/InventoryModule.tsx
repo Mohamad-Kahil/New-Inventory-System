@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import InventoryToolbar from "./InventoryToolbar";
 import InventoryTable from "./InventoryTable";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
@@ -11,12 +16,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Package,
   BarChart3,
   Tag,
   AlertTriangle,
   RefreshCw,
+  Calendar,
+  DollarSign,
+  Truck,
+  Info,
 } from "lucide-react";
 import {
   Select,
@@ -96,6 +106,7 @@ interface InventoryModuleProps {
 const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
   const [items, setItems] = useState<InventoryItem[]>(initialItems || []);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<InventoryItem | null>(null);
   const [activeTab, setActiveTab] = useState("inventory");
   const [searchQuery, setSearchQuery] = useState("");
@@ -133,8 +144,8 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
   };
 
   const handleViewItem = (item: InventoryItem) => {
-    // In a real app, you might navigate to a detailed view
-    console.log("View item:", item);
+    setCurrentItem(item);
+    setIsViewOpen(true);
   };
 
   const handleSaveItem = (item: InventoryItem) => {
@@ -457,6 +468,146 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
             onSave={handleSaveItem}
             onCancel={() => setIsFormOpen(false)}
           />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
+        <DialogContent className="sm:max-w-[800px]">
+          <DialogHeader>
+            <DialogTitle>Product Details</DialogTitle>
+          </DialogHeader>
+          {currentItem && (
+            <div className="grid grid-cols-12 gap-6">
+              <div className="col-span-5">
+                <div className="aspect-square rounded-md bg-muted flex items-center justify-center overflow-hidden">
+                  {currentItem.image ? (
+                    <img
+                      src={currentItem.image}
+                      alt={currentItem.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <Package className="h-24 w-24 text-muted-foreground" />
+                  )}
+                </div>
+              </div>
+              <div className="col-span-7 space-y-4">
+                <div>
+                  <h2 className="text-2xl font-bold">{currentItem.name}</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {currentItem.sku}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Category</p>
+                    <p className="font-medium">{currentItem.category}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      Sub Category
+                    </p>
+                    <p className="font-medium">{currentItem.subCategory}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Status</p>
+                    <Badge
+                      variant={
+                        currentItem.status === "In Stock"
+                          ? "default"
+                          : currentItem.status === "Low Stock"
+                            ? "secondary"
+                            : "destructive"
+                      }
+                    >
+                      {currentItem.status}
+                    </Badge>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Quantity</p>
+                    <p className="font-medium">{currentItem.quantity}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Cost</p>
+                    <p className="font-medium">
+                      ${currentItem.cost.toFixed(2)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Price</p>
+                    <p className="font-medium">
+                      ${currentItem.price.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+
+                {currentItem.description && (
+                  <div>
+                    <p className="text-sm text-muted-foreground">Description</p>
+                    <p>{currentItem.description}</p>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-4">
+                  {currentItem.supplier && (
+                    <div className="flex items-center gap-2">
+                      <Truck className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Supplier
+                        </p>
+                        <p className="font-medium">{currentItem.supplier}</p>
+                      </div>
+                    </div>
+                  )}
+                  {currentItem.reorderPoint !== undefined && (
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Reorder Point
+                        </p>
+                        <p className="font-medium">
+                          {currentItem.reorderPoint}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {currentItem.lastRestocked && (
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Last Restocked
+                        </p>
+                        <p className="font-medium">
+                          {currentItem.lastRestocked}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="pt-4 flex justify-end space-x-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsViewOpen(false)}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setIsViewOpen(false);
+                      setIsFormOpen(true);
+                    }}
+                  >
+                    Edit Product
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
