@@ -1,14 +1,28 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "./layout/Sidebar";
 import Header from "./layout/Header";
 import DashboardOverview from "./dashboard/DashboardOverview";
 import InventoryModule from "./inventory/InventoryModule";
 import POSModule from "./pos/POSModule";
+import AnalyticsModule from "./analytics/AnalyticsModule";
+import CustomersModule from "./customers/CustomersModule";
+import OrdersModule from "./orders/OrdersModule";
+import SuppliersModule from "./suppliers/SuppliersModule";
+import SettingsModule from "./settings/SettingsModule";
 
 const Home = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [currentModule, setCurrentModule] = useState("dashboard");
+  const location = useLocation();
+
+  // Determine current module based on path
+  const getModuleFromPath = () => {
+    const path = location.pathname;
+    if (path === "/") return "dashboard";
+    return path.substring(1); // Remove the leading slash
+  };
+
+  const currentModule = getModuleFromPath();
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -22,6 +36,16 @@ const Home = () => {
         return <InventoryModule />;
       case "pos":
         return <POSModule />;
+      case "analytics":
+        return <AnalyticsModule />;
+      case "customers":
+        return <CustomersModule />;
+      case "orders":
+        return <OrdersModule />;
+      case "suppliers":
+        return <SuppliersModule />;
+      case "settings":
+        return <SettingsModule />;
       default:
         return (
           <div className="flex items-center justify-center h-full">
@@ -36,10 +60,6 @@ const Home = () => {
           </div>
         );
     }
-  };
-
-  const handleModuleChange = (module: string) => {
-    setCurrentModule(module);
   };
 
   return (
