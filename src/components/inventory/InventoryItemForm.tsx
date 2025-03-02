@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Package } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -150,6 +151,35 @@ const InventoryItemForm: React.FC<InventoryItemFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-4 mb-4">
+        <Label htmlFor="image">Product Image</Label>
+        <div className="flex items-center gap-4">
+          <div className="h-24 w-24 rounded-md bg-muted flex items-center justify-center overflow-hidden">
+            {formData.image ? (
+              <img
+                src={formData.image}
+                alt="Product"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <Package className="h-8 w-8 text-muted-foreground" />
+            )}
+          </div>
+          <div className="flex-1">
+            <Input
+              id="image"
+              name="image"
+              placeholder="Enter image URL"
+              value={formData.image || ""}
+              onChange={handleChange}
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Enter a URL for the product image
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="sku">SKU</Label>

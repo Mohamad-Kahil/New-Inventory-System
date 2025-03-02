@@ -154,6 +154,19 @@ const InventoryToolbar = ({
               </SelectContent>
             </Select>
           )}
+
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => {
+              setSelectedCategory("all");
+              setSelectedSubCategory("all");
+              onFilter("all", "all");
+            }}
+            title="Reset Filters"
+          >
+            <RefreshCw className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 

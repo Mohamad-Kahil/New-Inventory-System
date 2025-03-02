@@ -11,7 +11,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Package, BarChart3, Tag, AlertTriangle } from "lucide-react";
+import {
+  Package,
+  BarChart3,
+  Tag,
+  AlertTriangle,
+  RefreshCw,
+} from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface InventoryItem {
   id: string;
@@ -172,7 +185,7 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
 
       <div className="flex-1 p-4 overflow-auto">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-3 mb-4">
+          <TabsList className="grid w-full max-w-md grid-cols-4 mb-4">
             <TabsTrigger value="inventory" className="flex items-center gap-2">
               <Package className="h-4 w-4" />
               Inventory
@@ -180,6 +193,13 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
             <TabsTrigger value="categories" className="flex items-center gap-2">
               <Tag className="h-4 w-4" />
               Categories
+            </TabsTrigger>
+            <TabsTrigger
+              value="subcategories"
+              className="flex items-center gap-2"
+            >
+              <Tag className="h-4 w-4" />
+              Sub Categories
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
@@ -250,6 +270,111 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
               onDelete={handleDeleteItem}
               onView={handleViewItem}
             />
+          </TabsContent>
+
+          <TabsContent value="subcategories" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Sub Category Management</CardTitle>
+                <CardDescription>
+                  Manage your inventory sub-categories and view sub-category
+                  statistics.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-medium">Sub Categories</h3>
+                    <div className="flex space-x-2">
+                      <Select defaultValue="Electronics">
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Select Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Electronics">
+                            Electronics
+                          </SelectItem>
+                          <SelectItem value="Clothing">Clothing</SelectItem>
+                          <SelectItem value="Food & Beverages">
+                            Food & Beverages
+                          </SelectItem>
+                          <SelectItem value="Office Supplies">
+                            Office Supplies
+                          </SelectItem>
+                          <SelectItem value="Furniture">Furniture</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button size="sm">Add Sub Category</Button>
+                    </div>
+                  </div>
+
+                  <div className="border rounded-md">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left p-3">Sub Category Name</th>
+                          <th className="text-left p-3">Parent Category</th>
+                          <th className="text-right p-3">Items</th>
+                          <th className="text-right p-3">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b">
+                          <td className="p-3 font-medium">Smartphones</td>
+                          <td className="p-3">Electronics</td>
+                          <td className="p-3 text-right">15</td>
+                          <td className="p-3 text-right">
+                            <Button variant="ghost" size="sm">
+                              Edit
+                            </Button>
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="p-3 font-medium">TVs</td>
+                          <td className="p-3">Electronics</td>
+                          <td className="p-3 text-right">8</td>
+                          <td className="p-3 text-right">
+                            <Button variant="ghost" size="sm">
+                              Edit
+                            </Button>
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="p-3 font-medium">Audio</td>
+                          <td className="p-3">Electronics</td>
+                          <td className="p-3 text-right">12</td>
+                          <td className="p-3 text-right">
+                            <Button variant="ghost" size="sm">
+                              Edit
+                            </Button>
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="p-3 font-medium">Wearables</td>
+                          <td className="p-3">Electronics</td>
+                          <td className="p-3 text-right">6</td>
+                          <td className="p-3 text-right">
+                            <Button variant="ghost" size="sm">
+                              Edit
+                            </Button>
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="p-3 font-medium">Computers</td>
+                          <td className="p-3">Electronics</td>
+                          <td className="p-3 text-right">4</td>
+                          <td className="p-3 text-right">
+                            <Button variant="ghost" size="sm">
+                              Edit
+                            </Button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="categories" className="space-y-4">
@@ -327,7 +452,7 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="sm:max-w-[600px]">
-          <InventoryItemForm
+          <InventoryItemFormComponent
             item={currentItem || undefined}
             onSave={handleSaveItem}
             onCancel={() => setIsFormOpen(false)}
@@ -337,5 +462,8 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
     </div>
   );
 };
+
+// Import the actual InventoryItemForm component
+import InventoryItemFormComponent from "./InventoryItemForm";
 
 export default InventoryModule;

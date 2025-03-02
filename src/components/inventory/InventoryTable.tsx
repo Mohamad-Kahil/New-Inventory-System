@@ -17,7 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { MoreHorizontal, Edit, Trash2, Eye } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2, Eye, Package } from "lucide-react";
 
 interface InventoryItem {
   id: string;
@@ -29,6 +29,7 @@ interface InventoryItem {
   cost: number;
   price: number;
   status: "In Stock" | "Low Stock" | "Out of Stock";
+  image?: string;
 }
 
 interface InventoryTableProps {
@@ -89,6 +90,7 @@ const InventoryTable = ({
                 onCheckedChange={(checked) => handleSelectAll(!!checked)}
               />
             </TableHead>
+            <TableHead>Image</TableHead>
             <TableHead>SKU</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Category</TableHead>
@@ -115,6 +117,19 @@ const InventoryTable = ({
                     handleSelectItem(item.id, !!checked)
                   }
                 />
+              </TableCell>
+              <TableCell>
+                <div className="h-10 w-10 rounded-md bg-muted flex items-center justify-center overflow-hidden">
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <Package className="h-5 w-5 text-muted-foreground" />
+                  )}
+                </div>
               </TableCell>
               <TableCell className="font-medium">{item.sku}</TableCell>
               <TableCell>{item.name}</TableCell>
@@ -176,6 +191,7 @@ const defaultItems: InventoryItem[] = [
     cost: 35.99,
     price: 79.99,
     status: "In Stock",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
   },
   {
     id: "2",
@@ -187,6 +203,7 @@ const defaultItems: InventoryItem[] = [
     cost: 89.99,
     price: 199.99,
     status: "Low Stock",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
   },
   {
     id: "3",
@@ -198,6 +215,7 @@ const defaultItems: InventoryItem[] = [
     cost: 25.5,
     price: 59.99,
     status: "In Stock",
+    image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1",
   },
   {
     id: "4",
@@ -209,6 +227,7 @@ const defaultItems: InventoryItem[] = [
     cost: 12.99,
     price: 29.99,
     status: "Out of Stock",
+    image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46",
   },
   {
     id: "5",
@@ -220,6 +239,7 @@ const defaultItems: InventoryItem[] = [
     cost: 15.75,
     price: 34.99,
     status: "In Stock",
+    image: "https://images.unsplash.com/photo-1605773527852-c546a8584ea3",
   },
 ];
 
