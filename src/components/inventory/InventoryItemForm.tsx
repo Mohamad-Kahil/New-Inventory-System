@@ -1081,13 +1081,15 @@ const InventoryItemForm: React.FC<InventoryItemFormProps> = ({
       </Tabs>
 
       <div className="flex items-center justify-end gap-4 py-6 px-6 border-t mt-4 bg-background sticky bottom-0 mb-4">
-        <Button type="button" variant="destructive" onClick={onCancel}>
+        <Button
+          type="button"
+          variant="destructive"
+          className="bg-red-700 hover:bg-red-800"
+          onClick={onCancel}
+        >
           Cancel
         </Button>
-        <Button
-          type="submit"
-          className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-500/90 hover:to-green-600/90"
-        >
+        <Button type="submit" className="bg-green-700 hover:bg-green-800">
           Save Product
         </Button>
       </div>
