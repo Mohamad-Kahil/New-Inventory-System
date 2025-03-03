@@ -8,6 +8,7 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -27,6 +28,10 @@ import {
   DollarSign,
   Truck,
   Info,
+  Plus,
+  Minus,
+  Trash2,
+  Edit,
 } from "lucide-react";
 import {
   Select,
@@ -111,11 +116,15 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
   );
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
+  const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<InventoryItem | null>(null);
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState("inventory");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedSubCategory, setSelectedSubCategory] = useState("all");
+  const [categoryName, setCategoryName] = useState("");
+  const [categoryDescription, setCategoryDescription] = useState("");
 
   // Mock data for inventory stats
   const inventoryStats = {
@@ -460,7 +469,15 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <h3 className="text-lg font-medium">Categories</h3>
-                    <Button size="sm">Add Category</Button>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        // Open dialog to add category
+                        setIsAddCategoryOpen(true);
+                      }}
+                    >
+                      Add Category
+                    </Button>
                   </div>
 
                   <div className="border rounded-md">
@@ -474,20 +491,139 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {inventoryStats.categories.map((category, index) => (
-                          <tr key={index} className="border-b">
-                            <td className="p-3 font-medium">{category.name}</td>
-                            <td className="p-3 text-right">{category.count}</td>
-                            <td className="p-3 text-right">
-                              ${category.value.toLocaleString()}
-                            </td>
-                            <td className="p-3 text-right">
-                              <Button variant="ghost" size="sm">
-                                Edit
-                              </Button>
-                            </td>
-                          </tr>
-                        ))}
+                        {inventoryStats.categories.map((category, index) => {
+                          const hasSubCategories =
+                            category.name === "Electronics" ||
+                            category.name === "Accessories" ||
+                            category.name === "Clothing";
+
+                          return (
+                            <React.Fragment key={index}>
+                              <tr className="border-b">
+                                <td className="p-3 font-medium">
+                                  <div className="flex items-center">
+                                    {hasSubCategories && (
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="p-0 mr-2"
+                                        onClick={() => {
+                                          if (
+                                            expandedCategories.includes(
+                                              category.name,
+                                            )
+                                          ) {
+                                            setExpandedCategories(
+                                              expandedCategories.filter(
+                                                (c) => c !== category.name,
+                                              ),
+                                            );
+                                          } else {
+                                            setExpandedCategories([
+                                              ...expandedCategories,
+                                              category.name,
+                                            ]);
+                                          }
+                                        }}
+                                      >
+                                        {expandedCategories.includes(
+                                          category.name,
+                                        ) ? (
+                                          <Minus className="h-4 w-4" />
+                                        ) : (
+                                          <Plus className="h-4 w-4" />
+                                        )}
+                                      </Button>
+                                    )}
+                                    {category.name}
+                                  </div>
+                                </td>
+                                <td className="p-3 text-right">
+                                  {category.count}
+                                </td>
+                                <td className="p-3 text-right">
+                                  ${category.value.toLocaleString()}
+                                </td>
+                                <td className="p-3 text-right">
+                                  <div className="flex justify-end space-x-1">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <Edit className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 w-8 p-0"
+                                      onClick={() => {
+                                        if (
+                                          window.confirm(
+                                            "Are you sure you want to delete this category?",
+                                          )
+                                        ) {
+                                          // Delete category logic would go here
+                                          console.log(
+                                            "Delete category:",
+                                            category.name,
+                                          );
+                                        }
+                                      }}
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                </td>
+                              </tr>
+                              {/* Show subcategories when expanded */}
+                              {expandedCategories.includes(category.name) && (
+                                <tr className="bg-muted/30">
+                                  <td colSpan={4} className="p-0">
+                                    <div className="p-2">
+                                      <table className="w-full">
+                                        <tbody>
+                                          <tr className="border-b border-border/50">
+                                            <td className="p-2 pl-8">
+                                              Smartphones
+                                            </td>
+                                            <td className="p-2 text-right">
+                                              15
+                                            </td>
+                                            <td className="p-2 text-right">
+                                              $12,500
+                                            </td>
+                                            <td className="p-2 text-right"></td>
+                                          </tr>
+                                          <tr className="border-b border-border/50">
+                                            <td className="p-2 pl-8">TVs</td>
+                                            <td className="p-2 text-right">
+                                              8
+                                            </td>
+                                            <td className="p-2 text-right">
+                                              $5,600
+                                            </td>
+                                            <td className="p-2 text-right"></td>
+                                          </tr>
+                                          <tr className="border-b border-border/50">
+                                            <td className="p-2 pl-8">Audio</td>
+                                            <td className="p-2 text-right">
+                                              12
+                                            </td>
+                                            <td className="p-2 text-right">
+                                              $3,200
+                                            </td>
+                                            <td className="p-2 text-right"></td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </td>
+                                </tr>
+                              )}
+                            </React.Fragment>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -668,6 +804,65 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Category Dialog */}
+      <Dialog open={isAddCategoryOpen} onOpenChange={setIsAddCategoryOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Add New Category</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <label htmlFor="categoryName" className="text-right">
+                Category Name
+              </label>
+              <Input
+                id="categoryName"
+                placeholder="Enter category name"
+                className="col-span-3"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <label htmlFor="categoryDescription" className="text-right">
+                Description
+              </label>
+              <Input
+                id="categoryDescription"
+                placeholder="Enter category description"
+                className="col-span-3"
+                value={categoryDescription}
+                onChange={(e) => setCategoryDescription(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex justify-end space-x-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsAddCategoryOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                // Add category to the inventory stats
+                if (categoryName.trim()) {
+                  const newCategory = {
+                    name: categoryName,
+                    count: 0,
+                    value: 0,
+                  };
+                  inventoryStats.categories.push(newCategory);
+                  setIsAddCategoryOpen(false);
+                }
+              }}
+            >
+              Save Category
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
