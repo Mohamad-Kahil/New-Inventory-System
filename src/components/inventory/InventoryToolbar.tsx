@@ -49,6 +49,13 @@ const InventoryToolbar = ({
     onSearch(searchQuery);
   };
 
+  // Trigger search on input change
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    onSearch(value); // Immediately trigger search on input change
+  };
+
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
     setSelectedSubCategory("all"); // Reset subcategory when category changes
@@ -63,41 +70,46 @@ const InventoryToolbar = ({
   // Get subcategories based on selected category
   const getSubCategories = () => {
     switch (selectedCategory) {
-      case "electronics":
+      case "Electronics":
         return [
-          { value: "smartphones", label: "Smartphones" },
-          { value: "tvs", label: "TVs" },
-          { value: "audio", label: "Audio" },
-          { value: "wearables", label: "Wearables" },
-          { value: "computers", label: "Computers" },
+          { value: "Smartphones", label: "Smartphones" },
+          { value: "TVs", label: "TVs" },
+          { value: "Audio", label: "Audio" },
+          { value: "Wearables", label: "Wearables" },
+          { value: "Computers", label: "Computers" },
         ];
-      case "clothing":
+      case "Clothing":
         return [
-          { value: "mens", label: "Men's" },
-          { value: "womens", label: "Women's" },
-          { value: "kids", label: "Kids" },
-          { value: "accessories", label: "Accessories" },
+          { value: "Men's", label: "Men's" },
+          { value: "Women's", label: "Women's" },
+          { value: "Kids", label: "Kids" },
+          { value: "Accessories", label: "Accessories" },
         ];
-      case "food":
+      case "Food & Beverages":
         return [
-          { value: "beverages", label: "Beverages" },
-          { value: "snacks", label: "Snacks" },
-          { value: "canned", label: "Canned Goods" },
-          { value: "dairy", label: "Dairy" },
+          { value: "Beverages", label: "Beverages" },
+          { value: "Snacks", label: "Snacks" },
+          { value: "Canned Goods", label: "Canned Goods" },
+          { value: "Dairy", label: "Dairy" },
         ];
-      case "office":
+      case "Office Supplies":
         return [
-          { value: "stationery", label: "Stationery" },
-          { value: "paper", label: "Paper Products" },
-          { value: "furniture", label: "Furniture" },
+          { value: "Stationery", label: "Stationery" },
+          { value: "Paper Products", label: "Paper Products" },
+          { value: "Furniture", label: "Furniture" },
         ];
-      case "furniture":
+      case "Furniture":
         return [
-          { value: "living", label: "Living Room" },
-          { value: "bedroom", label: "Bedroom" },
-          { value: "dining", label: "Dining" },
-          { value: "office", label: "Office" },
+          { value: "Living Room", label: "Living Room" },
+          { value: "Bedroom", label: "Bedroom" },
+          { value: "Dining", label: "Dining" },
+          { value: "Office", label: "Office" },
         ];
+      case "Accessories":
+      case "Audio":
+      case "Computers":
+      case "Other":
+        return [{ value: "General", label: "General" }];
       default:
         return [];
     }
@@ -110,7 +122,7 @@ const InventoryToolbar = ({
           <Input
             placeholder="Search inventory..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchInputChange}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             className="pl-9"
           />
@@ -128,11 +140,15 @@ const InventoryToolbar = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="electronics">Electronics</SelectItem>
-              <SelectItem value="clothing">Clothing</SelectItem>
-              <SelectItem value="food">Food & Beverages</SelectItem>
-              <SelectItem value="office">Office Supplies</SelectItem>
-              <SelectItem value="furniture">Furniture</SelectItem>
+              <SelectItem value="Electronics">Electronics</SelectItem>
+              <SelectItem value="Accessories">Accessories</SelectItem>
+              <SelectItem value="Audio">Audio</SelectItem>
+              <SelectItem value="Computers">Computers</SelectItem>
+              <SelectItem value="Other">Other</SelectItem>
+              <SelectItem value="Clothing">Clothing</SelectItem>
+              <SelectItem value="Food & Beverages">Food & Beverages</SelectItem>
+              <SelectItem value="Office Supplies">Office Supplies</SelectItem>
+              <SelectItem value="Furniture">Furniture</SelectItem>
             </SelectContent>
           </Select>
 

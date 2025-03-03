@@ -106,7 +106,9 @@ interface InventoryModuleProps {
 }
 
 const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
-  const [items, setItems] = useState<InventoryItem[]>(initialItems || []);
+  const [items, setItems] = useState<InventoryItem[]>(
+    initialItems || defaultItems,
+  );
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<InventoryItem | null>(null);
@@ -189,13 +191,11 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    // In a real app, you would filter the items based on the query
   };
 
   const handleFilter = (category: string, subCategory: string = "all") => {
     setSelectedCategory(category);
     setSelectedSubCategory(subCategory);
-    // In a real app, you would filter the items based on the category and subcategory
   };
 
   const handleImport = () => {
@@ -300,7 +300,43 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
             </div>
 
             <InventoryTable
-              items={items.length > 0 ? items : undefined}
+              items={
+                items.length > 0
+                  ? items.filter((item) => {
+                      // Filter by search query
+                      const matchesSearch = searchQuery
+                        ? item.name
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase()) ||
+                          item.sku
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase()) ||
+                          item.category
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase()) ||
+                          item.subCategory
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase())
+                        : true;
+
+                      // Filter by category
+                      const matchesCategory =
+                        selectedCategory === "all"
+                          ? true
+                          : item.category === selectedCategory;
+
+                      // Filter by subcategory
+                      const matchesSubCategory =
+                        selectedSubCategory === "all"
+                          ? true
+                          : item.subCategory === selectedSubCategory;
+
+                      return (
+                        matchesSearch && matchesCategory && matchesSubCategory
+                      );
+                    })
+                  : undefined
+              }
               onEdit={handleEditItem}
               onDelete={handleDeleteItem}
               onView={handleViewItem}
@@ -640,5 +676,69 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
 
 // Import the actual InventoryItemForm component
 import InventoryItemFormComponent from "./InventoryItemForm";
+
+// Default mock data for inventory items
+const defaultItems: InventoryItem[] = [
+  {
+    id: "1",
+    sku: "PRD-001",
+    name: "Wireless Headphones",
+    category: "Electronics",
+    subCategory: "Audio",
+    quantity: 45,
+    cost: 35.99,
+    price: 79.99,
+    status: "In Stock",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+  },
+  {
+    id: "2",
+    sku: "PRD-002",
+    name: "Smart Watch",
+    category: "Electronics",
+    subCategory: "Wearables",
+    quantity: 12,
+    cost: 89.99,
+    price: 199.99,
+    status: "Low Stock",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
+  },
+  {
+    id: "3",
+    sku: "PRD-003",
+    name: "Bluetooth Speaker",
+    category: "Electronics",
+    subCategory: "Audio",
+    quantity: 28,
+    cost: 25.5,
+    price: 59.99,
+    status: "In Stock",
+    image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1",
+  },
+  {
+    id: "4",
+    sku: "PRD-004",
+    name: "Laptop Stand",
+    category: "Accessories",
+    subCategory: "Computer Accessories",
+    quantity: 0,
+    cost: 12.99,
+    price: 29.99,
+    status: "Out of Stock",
+    image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46",
+  },
+  {
+    id: "5",
+    sku: "PRD-005",
+    name: "Wireless Mouse",
+    category: "Accessories",
+    subCategory: "Computer Accessories",
+    quantity: 32,
+    cost: 15.75,
+    price: 34.99,
+    status: "In Stock",
+    image: "https://images.unsplash.com/photo-1605773527852-c546a8584ea3",
+  },
+];
 
 export default InventoryModule;
