@@ -76,7 +76,7 @@ const AnalyticsModule: React.FC<AnalyticsModuleProps> = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
   return (
-    <div className="w-full h-full bg-background flex flex-col overflow-hidden">
+    <div className="w-full h-full bg-background flex flex-col overflow-x-hidden overflow-y-hidden">
       {/* Header */}
       <div className="w-full p-4 border-b border-border flex justify-between items-center">
         <div className="flex items-center space-x-2">

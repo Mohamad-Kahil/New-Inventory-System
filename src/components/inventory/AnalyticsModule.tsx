@@ -621,9 +621,9 @@ const InventoryAnalytics: React.FC<InventoryAnalyticsProps> = () => {
   };
 
   return (
-    <div className="w-full h-full bg-background flex flex-col">
+    <div className="w-full h-full bg-background flex flex-col overflow-x-hidden overflow-y-hidden">
       {/* Stats Cards */}
-      <div className="p-4 grid grid-cols-4 gap-4">
+      <div className="p-4 grid grid-cols-4 gap-3 scale-95">
         <Card
           onClick={() => setSelectedBox("reorder")}
           className={`p-2 cursor-pointer hover:bg-muted/50 transition-colors ${selectedBox === "reorder" ? "border-primary border-2" : ""}`}
@@ -673,7 +673,7 @@ const InventoryAnalytics: React.FC<InventoryAnalyticsProps> = () => {
         </Card>
       </div>
 
-      <div className="p-4 grid grid-cols-4 gap-4">
+      <div className="p-3 grid grid-cols-4 gap-3 scale-95">
         <Card
           onClick={() => setSelectedBox("productCategories")}
           className={`p-2 cursor-pointer hover:bg-muted/50 transition-colors ${selectedBox === "productCategories" ? "border-primary border-2" : ""}`}
@@ -724,7 +724,7 @@ const InventoryAnalytics: React.FC<InventoryAnalyticsProps> = () => {
       </div>
 
       {/* Data Display Section */}
-      <div className="flex-1 p-4 grid grid-cols-2 gap-4">
+      <div className="flex-1 p-3 grid grid-cols-2 gap-3 scale-95">
         <Card className="overflow-auto">
           <CardContent className="p-4">{renderTable()}</CardContent>
         </Card>
