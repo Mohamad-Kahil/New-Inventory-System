@@ -3,7 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "./layout/Sidebar";
 import Header from "./layout/Header";
 import DashboardOverview from "./dashboard/DashboardOverview";
-import InventoryModule from "./inventory/InventoryModule";
+import NewInventoryModule from "./inventory/NewInventoryModule";
 import POSModule from "./pos/POSModule";
 import AnalyticsModule from "./analytics/AnalyticsModule";
 import CustomersModule from "./customers/CustomersModule";
@@ -33,7 +33,7 @@ const Home = () => {
       case "dashboard":
         return <DashboardOverview />;
       case "inventory":
-        return <InventoryModule />;
+        return <NewInventoryModule />;
       case "pos":
         return <POSModule />;
       case "analytics":
@@ -72,7 +72,7 @@ const Home = () => {
           onMenuToggle={toggleSidebar}
         />
 
-        <main className="flex-1 overflow-hidden">{renderModuleContent()}</main>
+        <main className="flex-1 overflow-auto">{renderModuleContent()}</main>
       </div>
     </div>
   );
