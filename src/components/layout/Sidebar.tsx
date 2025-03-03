@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -49,47 +49,57 @@ const Sidebar = ({
   onToggle = () => {},
   className,
 }: SidebarProps) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const navItems: NavItem[] = [
     {
       title: "Dashboard",
       href: "/",
       icon: <LayoutDashboard className="h-5 w-5" />,
-      isActive: true,
+      isActive: currentPath === "/",
     },
     {
       title: "Inventory",
       href: "/inventory",
       icon: <Package className="h-5 w-5" />,
+      isActive: currentPath === "/inventory",
     },
     {
       title: "POS",
       href: "/pos",
       icon: <ShoppingCart className="h-5 w-5" />,
+      isActive: currentPath === "/pos",
     },
     {
       title: "Analytics",
       href: "/analytics",
       icon: <BarChart3 className="h-5 w-5" />,
+      isActive: currentPath === "/analytics",
     },
     {
       title: "Customers",
       href: "/customers",
       icon: <Users className="h-5 w-5" />,
+      isActive: currentPath === "/customers",
     },
     {
       title: "Orders",
       href: "/orders",
       icon: <FileText className="h-5 w-5" />,
+      isActive: currentPath === "/orders",
     },
     {
       title: "Suppliers",
       href: "/suppliers",
       icon: <Truck className="h-5 w-5" />,
+      isActive: currentPath === "/suppliers",
     },
     {
       title: "Settings",
       href: "/settings",
       icon: <Settings className="h-5 w-5" />,
+      isActive: currentPath === "/settings",
     },
   ];
 
