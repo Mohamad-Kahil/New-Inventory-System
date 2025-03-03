@@ -40,9 +40,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import CategoriesModule from "./CategoriesModule";
 import SubCategoriesModule from "./SubCategoriesModule";
 import InventoryAnalytics from "./AnalyticsModule";
+import InventoryItemForm from "./InventoryItemForm";
 
 interface InventoryItem {
   id: string;
@@ -59,10 +76,24 @@ interface InventoryItem {
 
 const NewInventoryModule = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Electronics");
-  const [selectedSubCategory, setSelectedSubCategory] = useState("Smartphones");
-  const [items] = useState<InventoryItem[]>(defaultItems);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("all");
+  const [items, setItems] = useState<InventoryItem[]>(defaultItems);
   const [activeTab, setActiveTab] = useState("inventory");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [currentItem, setCurrentItem] = useState<InventoryItem | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  // Reset filters when inventory tab is activated
+  React.useEffect(() => {
+    if (activeTab === "inventory") {
+      setSearchQuery("");
+      setSelectedCategory("all");
+      setSelectedSubCategory("all");
+    }
+  }, [activeTab]);
 
   // Filter items based on search query and category
   const filteredItems = items.filter((item) => {
@@ -196,7 +227,14 @@ const NewInventoryModule = () => {
                 </Button>
               </div>
             </div>
-            <Button className="flex items-center gap-1">
+            <Button
+              className="flex items-center gap-1"
+              onClick={() => {
+                setCurrentItem(null);
+                setIsEditMode(false);
+                setIsFormOpen(true);
+              }}
+            >
               <Plus className="h-4 w-4" />
               Add Item
             </Button>
@@ -278,13 +316,35 @@ const NewInventoryModule = () => {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end space-x-1">
-                        <Button variant="ghost" size="icon">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setCurrentItem(item);
+                            setIsViewOpen(true);
+                          }}
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setCurrentItem(item);
+                            setIsEditMode(true);
+                            setIsFormOpen(true);
+                          }}
+                        >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setCurrentItem(item);
+                            setIsDeleteDialogOpen(true);
+                          }}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -305,6 +365,157 @@ const NewInventoryModule = () => {
 
         {activeTab === "analytics" && <InventoryAnalytics />}
       </div>
+
+      {/* Inventory Item Form Dialog */}
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogContent className="sm:max-w-[900px] p-0 overflow-hidden">
+          <InventoryItemForm
+            item={currentItem || undefined}
+            onSave={(item) => {
+              if (isEditMode && currentItem) {
+                // Update existing item
+                setItems(
+                  items.map((i) => (i.id === currentItem.id ? item : i)),
+                );
+              } else {
+                // Add new item with a generated ID
+                const newItem = {
+                  ...item,
+                  id: `item-${Date.now()}`,
+                };
+                setItems([...items, newItem]);
+              }
+              setIsFormOpen(false);
+            }}
+            onCancel={() => setIsFormOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* View Item Dialog */}
+      <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
+        <DialogContent className="sm:max-w-[800px]">
+          <DialogHeader>
+            <DialogTitle>Product Details</DialogTitle>
+          </DialogHeader>
+          {currentItem && (
+            <div className="grid grid-cols-12 gap-6">
+              <div className="col-span-5">
+                <div className="aspect-square rounded-md bg-muted flex items-center justify-center overflow-hidden">
+                  {currentItem.image ? (
+                    <img
+                      src={currentItem.image}
+                      alt={currentItem.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <Package className="h-24 w-24 text-muted-foreground" />
+                  )}
+                </div>
+              </div>
+              <div className="col-span-7 space-y-4">
+                <div>
+                  <h2 className="text-2xl font-bold">{currentItem.name}</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {currentItem.sku}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Category</p>
+                    <p className="font-medium">{currentItem.category}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      Sub Category
+                    </p>
+                    <p className="font-medium">{currentItem.subCategory}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Status</p>
+                    <Badge
+                      variant={
+                        currentItem.status === "In Stock"
+                          ? "default"
+                          : currentItem.status === "Low Stock"
+                            ? "secondary"
+                            : "destructive"
+                      }
+                    >
+                      {currentItem.status}
+                    </Badge>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Quantity</p>
+                    <p className="font-medium">{currentItem.quantity}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Cost</p>
+                    <p className="font-medium">
+                      ${currentItem.cost.toFixed(2)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Price</p>
+                    <p className="font-medium">
+                      ${currentItem.price.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-4 flex justify-end space-x-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsViewOpen(false)}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setIsViewOpen(false);
+                      setIsEditMode(true);
+                      setIsFormOpen(true);
+                    }}
+                  >
+                    Edit Product
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              product
+              {currentItem ? ` "${currentItem.name}"` : ""} from your inventory.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (currentItem) {
+                  setItems(items.filter((item) => item.id !== currentItem.id));
+                }
+                setIsDeleteDialogOpen(false);
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
