@@ -1017,6 +1017,30 @@ const InventoryItemForm: React.FC<InventoryItemFormProps> = ({
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="stockStatus">Stock Status</Label>
+              <Select
+                value={formData.status}
+                onValueChange={(value) => handleSelectChange("status", value)}
+              >
+                <SelectTrigger id="stockStatus">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="In Stock">In Stock</SelectItem>
+                  <SelectItem value="Low Stock">Low Stock</SelectItem>
+                  <SelectItem value="Out of Stock">Out of Stock</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                {formData.quantity <= 0
+                  ? "No stock available"
+                  : formData.quantity <= (formData.minStockLevel || 5)
+                    ? "Stock below minimum level"
+                    : "Stock level is good"}
+              </p>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="reorderQuantity">Reorder Quantity</Label>
               <Input
                 id="reorderQuantity"
@@ -1072,7 +1096,18 @@ const InventoryItemForm: React.FC<InventoryItemFormProps> = ({
                 type="number"
                 min="0"
                 value={formData.quantity}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  // Update status based on quantity
+                  const qty = parseFloat(e.target.value) || 0;
+                  let newStatus = "In Stock";
+                  if (qty <= 0) {
+                    newStatus = "Out of Stock";
+                  } else if (qty <= (formData.minStockLevel || 5)) {
+                    newStatus = "Low Stock";
+                  }
+                  handleSelectChange("status", newStatus);
+                }}
                 placeholder="0"
               />
             </div>

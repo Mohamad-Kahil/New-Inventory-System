@@ -151,12 +151,22 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
   };
 
   const handleSaveItem = (item: InventoryItem) => {
+    // Determine stock status based on quantity and min stock level
+    const determineStockStatus = (qty: number, minLevel: number = 5) => {
+      if (qty <= 0) return "Out of Stock";
+      if (qty <= minLevel) return "Low Stock";
+      return "In Stock";
+    };
+
     if (currentItem) {
       // Update existing item with financial information
       const updatedItem = {
         ...item,
         cost: item.currentCost || item.cost || 0,
         price: item.salesPrice || item.price || 0,
+        status:
+          item.status ||
+          determineStockStatus(item.quantity, item.minStockLevel),
       };
       setItems(items.map((i) => (i.id === item.id ? updatedItem : i)));
     } else {
@@ -168,7 +178,9 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
         subCategory: item.subCategory || "General",
         cost: item.currentCost || item.cost || 0,
         price: item.salesPrice || item.price || 0,
-        status: item.quantity > 0 ? "In Stock" : "Out of Stock",
+        status:
+          item.status ||
+          determineStockStatus(item.quantity, item.minStockLevel),
       };
       setItems([...items, newItem]);
     }
