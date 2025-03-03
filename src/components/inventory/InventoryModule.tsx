@@ -176,8 +176,7 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
         cost: item.currentCost || item.cost || 0,
         price: item.salesPrice || item.price || 0,
         status:
-          item.status ||
-          determineStockStatus(item.quantity, item.minStockLevel),
+          item.status || determineStockStatus(item.quantity, item.reorderPoint),
       };
       setItems(items.map((i) => (i.id === item.id ? updatedItem : i)));
     } else {
@@ -190,8 +189,7 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
         cost: item.currentCost || item.cost || 0,
         price: item.salesPrice || item.price || 0,
         status:
-          item.status ||
-          determineStockStatus(item.quantity, item.minStockLevel),
+          item.status || determineStockStatus(item.quantity, item.reorderPoint),
       };
       setItems([...items, newItem]);
     }

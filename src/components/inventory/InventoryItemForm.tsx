@@ -141,7 +141,7 @@ const InventoryItemForm: React.FC<InventoryItemFormProps> = ({
 
       // Inventory Management
       minStockLevel: 0,
-      reorderLevel: 0,
+      reorderPoint: 0,
       maxStockLevel: 0,
       reorderQuantity: 0,
       leadTime: "",
@@ -1076,7 +1076,7 @@ const InventoryItemForm: React.FC<InventoryItemFormProps> = ({
                 name="reorderLevel"
                 type="number"
                 min="0"
-                value={formData.reorderLevel || 0}
+                value={formData.reorderPoint || 0}
                 onChange={handleChange}
                 placeholder="20"
               />
