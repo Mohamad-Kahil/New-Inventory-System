@@ -51,6 +51,8 @@ interface InventoryItem {
   reorderPoint?: number;
   lastRestocked?: string;
   image?: string;
+  currentCost?: number;
+  salesPrice?: number;
 }
 
 // Simple placeholder for InventoryItemForm since the actual component isn't implemented yet
@@ -150,13 +152,23 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
 
   const handleSaveItem = (item: InventoryItem) => {
     if (currentItem) {
-      // Update existing item
-      setItems(items.map((i) => (i.id === item.id ? item : i)));
+      // Update existing item with financial information
+      const updatedItem = {
+        ...item,
+        cost: item.currentCost || item.cost || 0,
+        price: item.salesPrice || item.price || 0,
+      };
+      setItems(items.map((i) => (i.id === item.id ? updatedItem : i)));
     } else {
       // Add new item with a generated ID
       const newItem = {
         ...item,
         id: `item-${Date.now()}`,
+        category: item.category || "Uncategorized",
+        subCategory: item.subCategory || "General",
+        cost: item.currentCost || item.cost || 0,
+        price: item.salesPrice || item.price || 0,
+        status: item.quantity > 0 ? "In Stock" : "Out of Stock",
       };
       setItems([...items, newItem]);
     }
