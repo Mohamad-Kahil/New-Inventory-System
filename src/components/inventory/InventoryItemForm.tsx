@@ -432,23 +432,102 @@ const InventoryItemForm: React.FC<InventoryItemFormProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="category">Category</Label>
-                  <Input
-                    id="category"
-                    name="category"
+                  <Select
                     value={formData.category}
-                    onChange={handleChange}
-                    placeholder="Lighting"
-                  />
+                    onValueChange={(value) =>
+                      handleSelectChange("category", value)
+                    }
+                  >
+                    <SelectTrigger id="category">
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Electronics">Electronics</SelectItem>
+                      <SelectItem value="Accessories">Accessories</SelectItem>
+                      <SelectItem value="Audio">Audio</SelectItem>
+                      <SelectItem value="Computers">Computers</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                      <SelectItem value="Clothing">Clothing</SelectItem>
+                      <SelectItem value="Food & Beverages">
+                        Food & Beverages
+                      </SelectItem>
+                      <SelectItem value="Office Supplies">
+                        Office Supplies
+                      </SelectItem>
+                      <SelectItem value="Furniture">Furniture</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="subCategory">Subcategory</Label>
-                  <Input
-                    id="subCategory"
-                    name="subCategory"
+                  <Select
                     value={formData.subCategory}
-                    onChange={handleChange}
-                    placeholder="LED Bulbs"
-                  />
+                    onValueChange={(value) =>
+                      handleSelectChange("subCategory", value)
+                    }
+                  >
+                    <SelectTrigger id="subCategory">
+                      <SelectValue placeholder="Select Subcategory" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {formData.category === "Electronics" && (
+                        <>
+                          <SelectItem value="Smartphones">
+                            Smartphones
+                          </SelectItem>
+                          <SelectItem value="TVs">TVs</SelectItem>
+                          <SelectItem value="Audio">Audio</SelectItem>
+                          <SelectItem value="Wearables">Wearables</SelectItem>
+                          <SelectItem value="Computers">Computers</SelectItem>
+                        </>
+                      )}
+                      {formData.category === "Clothing" && (
+                        <>
+                          <SelectItem value="Men's">Men's</SelectItem>
+                          <SelectItem value="Women's">Women's</SelectItem>
+                          <SelectItem value="Kids">Kids</SelectItem>
+                          <SelectItem value="Accessories">
+                            Accessories
+                          </SelectItem>
+                        </>
+                      )}
+                      {formData.category === "Food & Beverages" && (
+                        <>
+                          <SelectItem value="Beverages">Beverages</SelectItem>
+                          <SelectItem value="Snacks">Snacks</SelectItem>
+                          <SelectItem value="Canned Goods">
+                            Canned Goods
+                          </SelectItem>
+                          <SelectItem value="Dairy">Dairy</SelectItem>
+                        </>
+                      )}
+                      {formData.category === "Office Supplies" && (
+                        <>
+                          <SelectItem value="Stationery">Stationery</SelectItem>
+                          <SelectItem value="Paper Products">
+                            Paper Products
+                          </SelectItem>
+                          <SelectItem value="Furniture">Furniture</SelectItem>
+                        </>
+                      )}
+                      {formData.category === "Furniture" && (
+                        <>
+                          <SelectItem value="Living Room">
+                            Living Room
+                          </SelectItem>
+                          <SelectItem value="Bedroom">Bedroom</SelectItem>
+                          <SelectItem value="Dining">Dining</SelectItem>
+                          <SelectItem value="Office">Office</SelectItem>
+                        </>
+                      )}
+                      {(formData.category === "Accessories" ||
+                        formData.category === "Audio" ||
+                        formData.category === "Computers" ||
+                        formData.category === "Other") && (
+                        <SelectItem value="General">General</SelectItem>
+                      )}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="uom">Unit of Measure *</Label>
