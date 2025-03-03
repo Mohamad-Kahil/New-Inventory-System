@@ -462,7 +462,7 @@ const InventoryModule = ({ initialItems }: InventoryModuleProps) => {
       </div>
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[900px] p-0 overflow-hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <InventoryItemFormComponent
             item={currentItem || undefined}
             onSave={handleSaveItem}
